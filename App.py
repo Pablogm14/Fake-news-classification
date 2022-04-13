@@ -193,10 +193,10 @@ def resultados(noticia):
     if option=='TFIDF' or option=='conteo':
      
         if option=='TFIDF':
-            vectorizer = joblib.load("C:/Users/pablo.garcia/Desktop/Fakenews/CEL.IA/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
+            vectorizer = joblib.load("./TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         if option=='conteo':
-            vectorizer = joblib.load("C:/Users/pablo.garcia/Desktop/Fakenews/CEL.IA/conteo/conteo Temas/CONTEOTEMAS.pkl")
+            vectorizer = joblib.load("./conteo/conteo Temas/CONTEOTEMAS.pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
     
         
@@ -207,7 +207,7 @@ def resultados(noticia):
     #features = vectorizer.fit_transform([noticia]).toarray()
     #Cargo el modelo. 
     #Hago las predicciones en base a ese texto
-    pipe_lr = joblib.load(open("C:/Users/pablo.garcia/Desktop/Fakenews/CEL.IA/"+option+"/"+ option+" Temas/"+option2.replace(" ", "")+option.replace(" ", "")+".pkl","rb"))
+    pipe_lr = joblib.load(open("./Aplicacion/"+option+"/"+ option+" Temas/"+option2.replace(" ", "")+option.replace(" ", "")+".pkl","rb"))
     if option2=="Bagging":
         pipe_lr.n_features_=pipe_lr.n_features_in_
    
@@ -272,13 +272,13 @@ FEATURES=RES[3]
 def resultados2(features,option,option2,Categoria):
     if option=='TFIDF' or option=='conteo':
         if option=='TFIDF':
-            vectorizer = joblib.load("C:/Users/pablo.garcia/Desktop/Fakenews/CEL.IA/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
+            vectorizer = joblib.load("./TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         if option=='conteo':
-            vectorizer = joblib.load("C:/Users/pablo.garcia/Desktop/Fakenews/CEL.IA/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
+            vectorizer = joblib.load("./conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         else: features=features
-    pipe_lr = joblib.load(open("C:/Users/pablo.garcia/Desktop/Fakenews/CEL.IA/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
+    pipe_lr = joblib.load(open("./"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
     if option2=="Bagging":
         pipe_lr.n_features_=pipe_lr.n_features_in_
         
