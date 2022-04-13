@@ -207,7 +207,7 @@ def resultados(noticia):
     #features = vectorizer.fit_transform([noticia]).toarray()
     #Cargo el modelo. 
     #Hago las predicciones en base a ese texto
-    pipe_lr = joblib.load(open("./Aplicacion/"+option+"/"+ option+" Temas/"+option2.replace(" ", "")+option.replace(" ", "")+".pkl","rb"))
+    pipe_lr = joblib.load(open("./"+option+"/"+ option+" Temas/"+option2.replace(" ", "")+option.replace(" ", "")+".pkl","rb"))
     if option2=="Bagging":
         pipe_lr.n_features_=pipe_lr.n_features_in_
    
