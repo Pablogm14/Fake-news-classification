@@ -1,1 +1,2 @@
-texto_titulo='Clasificación de noticias'
+texto_titulo='[CEL.IA]'
+texto_subtitulo='CLASIFICACIÓN DE NOTICIAS'
