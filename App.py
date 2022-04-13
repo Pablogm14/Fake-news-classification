@@ -1,21 +1,18 @@
 
 import streamlit as st 
-import altair as alt
 import plotly.express as px 
 
 
 #import packages
 import numpy as np
 import pandas as pd
-import sklearn
-from sklearn import metrics
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score, precision_score, recall_score, f1_score
-import transformers
+
+
 import torch
-from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
+
 from transformers import AutoTokenizer, AutoModel
 import re
-import os
+
 import nltk
 nltk.download('punkt')
 from nltk.tokenize import word_tokenize
@@ -23,21 +20,17 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 
 
-import matplotlib.pyplot as plt
+
 from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import MultinomialNB, ComplementNB
-from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
-from sklearn.model_selection import train_test_split
+
 from sklearn.tree import DecisionTreeClassifier
 import pickle as pkl
 from sklearn import *
 
 
-import plotly.express as px
+
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from numpy import mean
-from numpy import std
-from sklearn.model_selection import GridSearchCV
+
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.linear_model import LogisticRegression
@@ -49,16 +42,14 @@ from sklearn.ensemble import BaggingClassifier
 import xgboost as xgb
 from xgboost import XGBClassifier
 from sklearn.svm import SVC
-from sklearn import metrics
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import os
+
+
 import joblib 
-import numpy as np
+
 import requests
 from bs4 import BeautifulSoup
 
-import textwrap
+
 pd.options.display.max_colwidth=800
 pd.options.display.max_columns=None
 
