@@ -196,7 +196,7 @@ def resultados(noticia):
             vectorizer = joblib.load(path+"/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         if option=='conteo':
-            vectorizer = joblib.load(".\conteo\conteoTemas\CONTEOTEMAS.pkl")
+            vectorizer = joblib.load(".\conteo\conteo Temas\CONTEOTEMAS.pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
     
         
