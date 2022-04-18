@@ -79,13 +79,13 @@ with side:
 with side:
     option = st.selectbox(
      'Elija el modelo de preprocesado de datos',
-     (' ','Beto', 'Beto emotion', 'Beto sentiment', 'Multilingual bert', 'Distilbert', 'spanberta'))
+     (' ','Beto', 'Beto emotion')) #'Beto sentiment', 'Multilingual bert', 'Distilbert', 'spanberta'))
 
 #ELEGIR EL MODELO DE CLASIFICACIÓN
 with side:
     option2 = st.selectbox(
      'Elija el algoritmo de clasificación deseado',
-     (' ','Regresión Logística',  'Random Forest', 'Redes Neuronales', 'K-NN', 'Árbol de decisión', 'Bagging','XGBoost', 'SVM'))
+     (' ','Regresión Logística',  'Random Forest', 'Redes Neuronales'))# 'K-NN', 'Árbol de decisión', 'Bagging','XGBoost', 'SVM'))
 
 
 
