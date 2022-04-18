@@ -79,7 +79,7 @@ with side:
 with side:
     option = st.selectbox(
      'Elija el modelo de preprocesado de datos',
-     (' ','Beto', 'Beto emotion', 'Beto sentiment', 'Multilingual bert', 'Distilbert', 'spanberta', 'conteo', 'TFIDF'))
+     (' ','Beto', 'Beto emotion', 'Beto sentiment', 'Multilingual bert', 'Distilbert', 'spanberta'))
 
 #ELEGIR EL MODELO DE CLASIFICACIÓN
 with side:
@@ -190,14 +190,14 @@ else:
         if option=='spanberta':
             token=modelo_bert("skimai/spanberta-base-cased")
             features = token[0][:,0,:].numpy()
-        if option=='TFIDF' or option=='conteo':
+       #if option=='TFIDF' or option=='conteo':
      
-            if option=='TFIDF':
-                vectorizer = joblib.load(path+"/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
-                features = vectorizer.transform(pd.Series(noticia)).toarray()
-            if option=='conteo':
-                vectorizer = joblib.load(".\conteo\conteo Temas\CONTEOTEMAS.pkl")
-                features = vectorizer.transform(pd.Series(noticia)).toarray()
+           # if option=='TFIDF':
+                #vectorizer = joblib.load(path+"/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
+               # features = vectorizer.transform(pd.Series(noticia)).toarray()
+            #if option=='conteo':
+               # vectorizer = joblib.load(".\conteo\CONTEOTEMAS.pkl")
+               # features = vectorizer.transform(pd.Series(noticia)).toarray()
     
         
         
@@ -270,15 +270,15 @@ else:
     FEATURES=RES[3]
     
     def resultados2(features,option,option2,Categoria):
-        if option=='TFIDF' or option=='conteo':
-            if option=='TFIDF':
-                vectorizer = joblib.load(path+"/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
-                features = vectorizer.transform(pd.Series(noticia)).toarray()
-            if option=='conteo':
-                vectorizer = joblib.load(path+"/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
-                features = vectorizer.transform(pd.Series(noticia)).toarray()
-            else: features=features
-            pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
+        #if option=='TFIDF' or option=='conteo':
+            #if option=='TFIDF':
+               # vectorizer = joblib.load(path+"/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
+               # features = vectorizer.transform(pd.Series(noticia)).toarray()
+           # if option=='conteo':
+              #  vectorizer = joblib.load(path+"/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
+               # features = vectorizer.transform(pd.Series(noticia)).toarray()
+            #else: features=features
+        pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
         if option2=="Bagging":
             pipe_lr.n_features_=pipe_lr.n_features_in_
         
