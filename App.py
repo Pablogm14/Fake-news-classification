@@ -79,13 +79,13 @@ with side:
 with side:
     option = st.selectbox(
      'Elija el modelo de preprocesado de datos',
-     ('Beto', 'Beto emotion', 'Beto sentiment', 'Multilingual bert', 'Distilbert', 'spanberta', 'conteo', 'TFIDF'))
+     (' ','Beto', 'Beto emotion', 'Beto sentiment', 'Multilingual bert', 'Distilbert', 'spanberta', 'conteo', 'TFIDF'))
 
 #ELEGIR EL MODELO DE CLASIFICACIÓN
 with side:
     option2 = st.selectbox(
      'Elija el algoritmo de clasificación deseado',
-     ('Regresión Logística',  'Random Forest', 'Redes Neuronales', 'K-NN', 'Árbol de decisión', 'Bagging','XGBoost', 'SVM'))
+     (' ','Regresión Logística',  'Random Forest', 'Redes Neuronales', 'K-NN', 'Árbol de decisión', 'Bagging','XGBoost', 'SVM'))
 
 
 
@@ -155,49 +155,49 @@ noticia = stop_words_fun(noticia) #Elimino preposiciones, etc
 
 noticia=clean(noticia)
 
-
-
-
-def resultados(noticia):
-    def modelo_bert(nombre):
-        tokenizer = AutoTokenizer.from_pretrained(nombre)
-        model = AutoModel.from_pretrained(nombre)
-        tokenized =tokenizer.encode(noticia, add_special_tokens=True, truncation = True, max_length = 512)
-        input_ids = torch.tensor(tokenized)  
+if option==' ' or option2==' ':
+    st.write("Selecciona un modelo")
+else:
+    def resultados(noticia):
+        def modelo_bert(nombre):
+            tokenizer = AutoTokenizer.from_pretrained(nombre)
+            model = AutoModel.from_pretrained(nombre)
+            tokenized =tokenizer.encode(noticia, add_special_tokens=True, truncation = True, max_length = 512)
+            input_ids = torch.tensor(tokenized)  
     
-        input_ids = input_ids.unsqueeze(0)
+            input_ids = input_ids.unsqueeze(0)
 
-        with torch.no_grad():
-            last_hidden_states = model(input_ids)
+            with torch.no_grad():
+                last_hidden_states = model(input_ids)
     
-        return last_hidden_states
+            return last_hidden_states
     
-    if option=='Beto':
-        token=modelo_bert("dccuchile/bert-base-spanish-wwm-uncased")
-        features = token[0][:,0,:].numpy()
-    if option=='Beto emotion':
-        token=modelo_bert("finiteautomata/beto-emotion-analysis")
-        features = token[0][:,0,:].numpy()
-    if option=='Beto sentiment':
-        token=modelo_bert("finiteautomata/beto-sentiment-analysis")
-        features = token[0][:,0,:].numpy()
-    if option== 'Multilingual bert':
-        token=modelo_bert("nlptown/bert-base-multilingual-uncased-sentiment")
-        features = token[0][:,0,:].numpy()
-    if option=='Distilbert':
-        token=modelo_bert("mrm8488/distill-bert-base-spanish-wwm-cased-finetuned-spa-squad2-es")
-        features = token[0][:,0,:].numpy()
-    if option=='spanberta':
-        token=modelo_bert("skimai/spanberta-base-cased")
-        features = token[0][:,0,:].numpy()
-    if option=='TFIDF' or option=='conteo':
+        if option=='Beto':
+            token=modelo_bert("dccuchile/bert-base-spanish-wwm-uncased")
+            features = token[0][:,0,:].numpy()
+        if option=='Beto emotion':
+            token=modelo_bert("finiteautomata/beto-emotion-analysis")
+            features = token[0][:,0,:].numpy()
+        if option=='Beto sentiment':
+            token=modelo_bert("finiteautomata/beto-sentiment-analysis")
+            features = token[0][:,0,:].numpy()
+        if option== 'Multilingual bert':
+            token=modelo_bert("nlptown/bert-base-multilingual-uncased-sentiment")
+            features = token[0][:,0,:].numpy()
+        if option=='Distilbert':
+            token=modelo_bert("mrm8488/distill-bert-base-spanish-wwm-cased-finetuned-spa-squad2-es")
+            features = token[0][:,0,:].numpy()
+        if option=='spanberta':
+            token=modelo_bert("skimai/spanberta-base-cased")
+            features = token[0][:,0,:].numpy()
+        if option=='TFIDF' or option=='conteo':
      
-        if option=='TFIDF':
-            vectorizer = joblib.load(path+"/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
-            features = vectorizer.transform(pd.Series(noticia)).toarray()
-        if option=='conteo':
-            vectorizer = joblib.load(".\conteo\conteo Temas\CONTEOTEMAS.pkl")
-            features = vectorizer.transform(pd.Series(noticia)).toarray()
+            if option=='TFIDF':
+                vectorizer = joblib.load(path+"/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
+                features = vectorizer.transform(pd.Series(noticia)).toarray()
+            if option=='conteo':
+                vectorizer = joblib.load(".\conteo\conteo Temas\CONTEOTEMAS.pkl")
+                features = vectorizer.transform(pd.Series(noticia)).toarray()
     
         
         
@@ -207,101 +207,102 @@ def resultados(noticia):
     #features = vectorizer.fit_transform([noticia]).toarray()
     #Cargo el modelo. 
     #Hago las predicciones en base a ese texto
-    pipe_lr = joblib.load(open("./"+option+"/"+ option+" Temas/"+option2.replace(" ", "")+option.replace(" ", "")+".pkl","rb"))
-    if option2=="Bagging":
-        pipe_lr.n_features_=pipe_lr.n_features_in_
+        pipe_lr = joblib.load(open("./"+option+"/"+ option+" Temas/"+option2.replace(" ", "")+option.replace(" ", "")+".pkl","rb"))
+        if option2=="Bagging":
+            pipe_lr.n_features_=pipe_lr.n_features_in_
    
    
-    results = pipe_lr.predict(features)
-    probs= pipe_lr.predict_proba(features)
-    labels=pipe_lr.classes_
-    return [results[0],probs[0],labels, features]
+        results = pipe_lr.predict(features)
+        probs= pipe_lr.predict_proba(features)
+        labels=pipe_lr.classes_
+        return [results[0],probs[0],labels, features]
 
 
-import plotly.express as px
+    import plotly.express as px
 #Gráfica
-def grafica(datos,etiquetas):
+    def grafica(datos,etiquetas):
 
-   df=pd.DataFrame()
-   df["Probabilidad"]=datos
-   df["Categoría"]=etiquetas
-   fig = px.pie(df, values='Probabilidad', names='Categoría')
-   fig.update_layout(title_text="Probabilidad por categoría",title_xref="paper",title_xanchor="center",title_font_family="Times New Roman",
-                     legend_title_text="Categoría", title_x=0.53)
+        df=pd.DataFrame()
+        df["Probabilidad"]=datos
+        df["Categoría"]=etiquetas
+        fig = px.pie(df, values='Probabilidad', names='Categoría')
+        fig.update_layout(title_text="Probabilidad por categoría",title_xref="paper",title_xanchor="center",title_font_family="Times New Roman",
+                          legend_title_text="Categoría", title_x=0.53)
    
    
-   return fig
-import eli5
-from eli5 import explain_weights, explain_prediction
-from eli5.lime import TextExplainer
-from eli5.lime.samplers import MaskingTextSampler
-from IPython.core.display import display, HTML
-from eli5.formatters import format_as_html, format_as_text, format_html_styles, fields
-show_html = lambda html: display(HTML(html))
-show_html_expl = lambda expl, **kwargs: show_html(format_as_html(expl, include_styles=False, **kwargs))
-show_html(format_html_styles())
+        return fig
+    import eli5
+    from eli5 import explain_weights, explain_prediction
+    from eli5.lime import TextExplainer
+    from eli5.lime.samplers import MaskingTextSampler
+    from IPython.core.display import display, HTML
+    from eli5.formatters import format_as_html, format_as_text, format_html_styles, fields
+    show_html = lambda html: display(HTML(html))
+    show_html_expl = lambda expl, **kwargs: show_html(format_as_html(expl, include_styles=False, **kwargs))
+    show_html(format_html_styles())
 
 
-def predictor(texts):
-    return np.array([resultados(string)[1] for string in texts])
+    def predictor(texts):
+        return np.array([resultados(string)[1] for string in texts])
 
-te = TextExplainer(n_samples=5,random_state=42,sampler=MaskingTextSampler())
-te.fit(noticia, predictor)
+    te = TextExplainer(n_samples=5,random_state=42,sampler=MaskingTextSampler())
+    te.fit(noticia, predictor)
 
-RES=resultados(noticia)
+    RES=resultados(noticia)
 
-expl = te.show_prediction(target_names=[RES[2][0], RES[2][1], RES[2][2], RES[2][3],
-       RES[2][4]], top_targets=5, show_feature_values=True)
-raw_html = expl._repr_html_()
+    expl = te.show_prediction(target_names=[RES[2][0], RES[2][1], RES[2][2], RES[2][3],
+                                            RES[2][4]], top_targets=5, show_feature_values=True)
+    raw_html = expl._repr_html_()
 
 
-with st.spinner('Calculando...'):
-    st.write(grafica(RES[1],RES[2]))
-    st.write("La temática de la noticia es:", RES[0], "con una probabilidad igual a", format( RES[1].max(), '.2%'))
-
-    
-from streamlit.components import v1
-with st.expander('IMPORTANCIA DEL TEXTO EN CADA CATEGORÍA'):
-    v1.html(raw_html, height=10000)
-    
-    
-#CLASIFICACIÓN FAKE NEWS
-Categoria=RES[0]
-FEATURES=RES[3]
-
-def resultados2(features,option,option2,Categoria):
-    if option=='TFIDF' or option=='conteo':
-        if option=='TFIDF':
-            vectorizer = joblib.load(path+"/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
-            features = vectorizer.transform(pd.Series(noticia)).toarray()
-        if option=='conteo':
-            vectorizer = joblib.load(path+"/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
-            features = vectorizer.transform(pd.Series(noticia)).toarray()
-        else: features=features
-    pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
-    if option2=="Bagging":
-        pipe_lr.n_features_=pipe_lr.n_features_in_
-        
-    results = pipe_lr.predict(features)
-    probs= pipe_lr.predict_proba(features)
-    labels=pipe_lr.classes_
-    return [results[0],probs[0],labels]
-
-RES2=resultados2(FEATURES,option,option2,Categoria)
-def grafica2(datos,etiquetas):
-   df=pd.DataFrame()
-   df["Probabilidad"]=datos
-   df["Categoría"]=["Falsa", "Verdadera"]
-   fig = px.bar(df, x="Categoría", y="Probabilidad")
-   fig.update_layout(title_text="Probabilidad por categoría",title_xref="paper",title_xanchor="center",title_font_family="Times New Roman",
-                     legend_title_text="Categoría", title_x=0.53)
-   return fig
-
-a=[]
-if RES2[0]==True:
-    a='Verdadera'
-else: a='Falsa'
-with st.expander('VERACIDAD DE LA NOTICIA ATENDIENDO A LA TEMÁTICA OBTENIDA'):
     with st.spinner('Calculando...'):
-        st.write(grafica2(RES2[1],RES2[2]))   
-        st.write("La noticia es:", a , "con una probabilidad igual a", format( RES2[1].max(), '.2%'))
+        st.write(grafica(RES[1],RES[2]))
+        st.write("La temática de la noticia es:", RES[0], "con una probabilidad igual a", format( RES[1].max(), '.2%'))
+
+    
+    from streamlit.components import v1
+    with st.expander('IMPORTANCIA DEL TEXTO EN CADA CATEGORÍA'):
+        v1.html(raw_html, height=10000)
+    
+    
+    #CLASIFICACIÓN FAKE NEWS
+    Categoria=RES[0]
+    FEATURES=RES[3]
+    
+    def resultados2(features,option,option2,Categoria):
+        if option=='TFIDF' or option=='conteo':
+            if option=='TFIDF':
+                vectorizer = joblib.load(path+"/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
+                features = vectorizer.transform(pd.Series(noticia)).toarray()
+            if option=='conteo':
+                vectorizer = joblib.load(path+"/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
+                features = vectorizer.transform(pd.Series(noticia)).toarray()
+            else: features=features
+            pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
+        if option2=="Bagging":
+            pipe_lr.n_features_=pipe_lr.n_features_in_
+        
+        results = pipe_lr.predict(features)
+        probs= pipe_lr.predict_proba(features)
+        labels=pipe_lr.classes_
+        
+        return [results[0],probs[0],labels]
+
+    RES2=resultados2(FEATURES,option,option2,Categoria)
+    def grafica2(datos,etiquetas):
+        df=pd.DataFrame()
+        df["Probabilidad"]=datos
+        df["Categoría"]=["Falsa", "Verdadera"]
+        fig = px.bar(df, x="Categoría", y="Probabilidad")
+        fig.update_layout(title_text="Probabilidad por categoría",title_xref="paper",title_xanchor="center",title_font_family="Times New Roman",
+                          legend_title_text="Categoría", title_x=0.53)
+        return fig
+
+    a=[]
+    if RES2[0]==True:
+        a='Verdadera'
+    else: a='Falsa'
+    with st.expander('VERACIDAD DE LA NOTICIA ATENDIENDO A LA TEMÁTICA OBTENIDA'):
+        with st.spinner('Calculando...'):
+            st.write(grafica2(RES2[1],RES2[2]))   
+            st.write("La noticia es:", a , "con una probabilidad igual a", format( RES2[1].max(), '.2%'))
