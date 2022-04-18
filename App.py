@@ -19,15 +19,13 @@ from nltk.tokenize import word_tokenize
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 
-
+import os
 
 from sklearn.linear_model import LogisticRegression
 
 from sklearn.tree import DecisionTreeClassifier
 import pickle as pkl
 from sklearn import *
-
-
 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
@@ -53,6 +51,7 @@ from bs4 import BeautifulSoup
 pd.options.display.max_colwidth=800
 pd.options.display.max_columns=None
 
+path = os.path.dirname(__file__)
 from textos import texto_titulo,texto_subtitulo
 st.title(texto_titulo)
 st.header(texto_subtitulo)
@@ -158,6 +157,7 @@ noticia=clean(noticia)
 
 
 
+
 def resultados(noticia):
     def modelo_bert(nombre):
         tokenizer = AutoTokenizer.from_pretrained(nombre)
@@ -193,10 +193,10 @@ def resultados(noticia):
     if option=='TFIDF' or option=='conteo':
      
         if option=='TFIDF':
-            vectorizer = joblib.load("./TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
+            vectorizer = joblib.load(path+"/TFIDF/TFIDF Temas/TFIDFTEMAS.pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         if option=='conteo':
-            vectorizer = joblib.load("./conteo/conteo Temas/CONTEOTEMAS.pkl")
+            vectorizer = joblib.load(".\conteo\conteoTemas\CONTEOTEMAS.pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
     
         
@@ -272,13 +272,13 @@ FEATURES=RES[3]
 def resultados2(features,option,option2,Categoria):
     if option=='TFIDF' or option=='conteo':
         if option=='TFIDF':
-            vectorizer = joblib.load("./TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
+            vectorizer = joblib.load(path+"/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         if option=='conteo':
-            vectorizer = joblib.load("./conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
+            vectorizer = joblib.load(path+"/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
             features = vectorizer.transform(pd.Series(noticia)).toarray()
         else: features=features
-    pipe_lr = joblib.load(open("./"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
+    pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
     if option2=="Bagging":
         pipe_lr.n_features_=pipe_lr.n_features_in_
         
