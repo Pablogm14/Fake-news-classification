@@ -2,6 +2,7 @@ beautifulsoup4==4.10.0
 eli5
 es-core-news-sm==3.1.0
 joblib==1.1.0
+Jinja2
 keras==2.6.0
 matplotlib==3.4.3
 matplotlib-inline==0.1.2
