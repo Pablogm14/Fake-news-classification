@@ -55,6 +55,7 @@ path = os.path.dirname(__file__)
 from textos import texto_titulo,texto_subtitulo
 st.title(texto_titulo)
 st.header(texto_subtitulo)
+
 def scraping(url):
     page = requests.get(url)
 #Con el mundo, marca, el pais funciona
@@ -87,7 +88,8 @@ with side:
      'Elija el algoritmo de clasificación deseado',
      (' ','Regresión Logística',  'Random Forest', 'Redes Neuronales'))# 'K-NN', 'Árbol de decisión', 'Bagging','XGBoost', 'SVM'))
 
-
+with side:
+    boton=st.button('Ejecutar')
 
 
     #Creamos las funciones pertinentes para cargar los datos
@@ -255,22 +257,23 @@ else:
     raw_html = expl._repr_html_()
 
 
-    with st.spinner('Calculando...'):
-        st.write(grafica(RES[1],RES[2]))
-        st.write("La temática de la noticia es:", RES[0], "con una probabilidad igual a", format( RES[1].max(), '.2%'))
+    if boton==True:    
+        with st.spinner('Calculando...'):
+            st.write(grafica(RES[1],RES[2]))
+            st.write("La temática de la noticia es:", RES[0], "con una probabilidad igual a", format( RES[1].max(), '.2%'))
 
     
-    from streamlit.components import v1
-    with st.expander('IMPORTANCIA DEL TEXTO EN CADA CATEGORÍA'):
-        v1.html(raw_html, height=10000)
+        from streamlit.components import v1
+        with st.expander('IMPORTANCIA DEL TEXTO EN CADA CATEGORÍA'):
+            v1.html(raw_html, height=10000)
     
     
-    #CLASIFICACIÓN FAKE NEWS
-    Categoria=RES[0]
-    FEATURES=RES[3]
+        #CLASIFICACIÓN FAKE NEWS
+        Categoria=RES[0]
+        FEATURES=RES[3]
     
-    def resultados2(features,option,option2,Categoria):
-        #if option=='TFIDF' or option=='conteo':
+        def resultados2(features,option,option2,Categoria):
+            #if option=='TFIDF' or option=='conteo':
             #if option=='TFIDF':
                # vectorizer = joblib.load(path+"/TFIDF/TFIDF "+Categoria+"/TFIDF"+Categoria.replace(" ", "")+".pkl")
                # features = vectorizer.transform(pd.Series(noticia)).toarray()
@@ -278,31 +281,33 @@ else:
               #  vectorizer = joblib.load(path+"/conteo/conteo "+Categoria+"/conteo"+Categoria.replace(" ", "")+".pkl")
                # features = vectorizer.transform(pd.Series(noticia)).toarray()
             #else: features=features
-        pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
-        if option2=="Bagging":
-            pipe_lr.n_features_=pipe_lr.n_features_in_
+            pipe_lr = joblib.load(open(path+"/"+option+"/"+ option+" "+Categoria+"/"+option2.replace(" ", "")+option.replace(" ", "")+Categoria.replace(" ", "")+".pkl","rb"))
+            if option2=="Bagging":
+                pipe_lr.n_features_=pipe_lr.n_features_in_
         
-        results = pipe_lr.predict(features)
-        probs= pipe_lr.predict_proba(features)
-        labels=pipe_lr.classes_
+            results = pipe_lr.predict(features)
+            probs= pipe_lr.predict_proba(features)
+            labels=pipe_lr.classes_
         
-        return [results[0],probs[0],labels]
+            return [results[0],probs[0],labels]
 
-    RES2=resultados2(FEATURES,option,option2,Categoria)
-    def grafica2(datos,etiquetas):
-        df=pd.DataFrame()
-        df["Probabilidad"]=datos
-        df["Categoría"]=["Falsa", "Verdadera"]
-        fig = px.bar(df, x="Categoría", y="Probabilidad")
-        fig.update_layout(title_text="Probabilidad por categoría",title_xref="paper",title_xanchor="center",title_font_family="Times New Roman",
+        RES2=resultados2(FEATURES,option,option2,Categoria)
+        def grafica2(datos,etiquetas):
+            df=pd.DataFrame()
+            df["Probabilidad"]=datos
+            df["Categoría"]=["Falsa", "Verdadera"]
+            fig = px.bar(df, x="Categoría", y="Probabilidad")
+            fig.update_layout(title_text="Probabilidad por categoría",title_xref="paper",title_xanchor="center",title_font_family="Times New Roman",
                           legend_title_text="Categoría", title_x=0.53)
-        return fig
+            return fig
 
-    a=[]
-    if RES2[0]==True:
-        a='Verdadera'
-    else: a='Falsa'
-    with st.expander('VERACIDAD DE LA NOTICIA ATENDIENDO A LA TEMÁTICA OBTENIDA'):
-        with st.spinner('Calculando...'):
-            st.write(grafica2(RES2[1],RES2[2]))   
-            st.write("La noticia es:", a , "con una probabilidad igual a", format( RES2[1].max(), '.2%'))
+        a=[]
+        if RES2[0]==True:
+            a='Verdadera'
+        else: a='Falsa'
+        with st.expander('VERACIDAD DE LA NOTICIA ATENDIENDO A LA TEMÁTICA OBTENIDA'):
+            with st.spinner('Calculando...'):
+                st.write(grafica2(RES2[1],RES2[2]))   
+                st.write("La noticia es:", a , "con una probabilidad igual a", format( RES2[1].max(), '.2%'))
+    else:
+        st.write("Introduzca los parámetros y ejecute la aplicación")
