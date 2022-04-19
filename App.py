@@ -40,8 +40,7 @@ from sklearn.ensemble import BaggingClassifier
 import xgboost as xgb
 from xgboost import XGBClassifier
 from sklearn.svm import SVC
-from streamlit import caching
-caching.clear_cache()
+
 
 import joblib 
 
