@@ -40,7 +40,8 @@ from sklearn.ensemble import BaggingClassifier
 import xgboost as xgb
 from xgboost import XGBClassifier
 from sklearn.svm import SVC
-
+from streamlit import caching
+caching.clear_cache()
 
 import joblib 
 
@@ -48,6 +49,8 @@ import requests
 from bs4 import BeautifulSoup
 
 import gc
+#Enable garbage collection
+gc.enable()
 gc.collect()
 pd.options.display.max_colwidth=800
 pd.options.display.max_columns=None
