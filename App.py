@@ -47,15 +47,17 @@ import joblib
 import requests
 from bs4 import BeautifulSoup
 
-
+import gc
+gc.collect()
 pd.options.display.max_colwidth=800
 pd.options.display.max_columns=None
 
 path = os.path.dirname(__file__)
 from textos import texto_titulo,texto_subtitulo
+
 st.title(texto_titulo)
 st.header(texto_subtitulo)
-
+@st.cache(suppress_st_warning=True)
 def scraping(url):
     page = requests.get(url)
 #Con el mundo, marca, el pais funciona
@@ -271,7 +273,7 @@ else:
         #CLASIFICACIÓN FAKE NEWS
         Categoria=RES[0]
         FEATURES=RES[3]
-    
+        path = os.path.dirname(__file__)
         def resultados2(features,option,option2,Categoria):
             #if option=='TFIDF' or option=='conteo':
             #if option=='TFIDF':
@@ -311,3 +313,7 @@ else:
                 st.write("La noticia es:", a , "con una probabilidad igual a", format( RES2[1].max(), '.2%'))
     else:
         st.write("Introduzca los parámetros y ejecute la aplicación")
+        
+        
+import gc
+gc.collect()
