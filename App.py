@@ -95,11 +95,12 @@ with side:
 
 
     #Creamos las funciones pertinentes para cargar los datos
+@st.cache(suppress_st_warning=True)
 def clean_fake(text):
     cleaned_text_1 = re.sub('".*?"', '', text)
     cleaned_text = re.sub(r'\.(?=[^ \W\d])', '. ',  cleaned_text_1)
     return cleaned_text
-
+@st.cache(suppress_st_warning=True)
 def clean(text):
 # removing all the characters other than alphabets
     cleaned_text_1= re.sub("[^a-zA-ZñÑ]", " ", text)
@@ -109,7 +110,7 @@ def clean(text):
         #all lowercase
     cleaned_text= cleaned_text.lower()
     return cleaned_text
-
+@st.cache(suppress_st_warning=True)
 def normalize(s):  #Para quitar las tildes
     replacements = (
             ("á", "a"),
@@ -132,7 +133,7 @@ noticia=clean(noticia)
         
 
 
-
+@st.cache(suppress_st_warning=True)
 def stop_words_fun(col):
         text = col 
         string = str(text)
@@ -145,7 +146,7 @@ def stop_words_fun(col):
     #remove stopwords
 stop = stopwords.words('spanish') 
 stop = set(stop)
-
+@st.cache(suppress_st_warning=True)
 def remove_stop_words(col):
     text = str(col)
     sent_text = nltk.sent_tokenize(text)
@@ -162,7 +163,9 @@ noticia=clean(noticia)
 if option==' ' or option2==' ':
     st.write("Selecciona un modelo")
 else:
+    @st.cache(suppress_st_warning=True)
     def resultados(noticia):
+        @st.cache(suppress_st_warning=True)
         def modelo_bert(nombre):
             tokenizer = AutoTokenizer.from_pretrained(nombre)
             model = AutoModel.from_pretrained(nombre)
@@ -224,6 +227,7 @@ else:
 
     import plotly.express as px
 #Gráfica
+    @st.cache(suppress_st_warning=True)
     def grafica(datos,etiquetas):
 
         df=pd.DataFrame()
@@ -245,7 +249,7 @@ else:
     show_html_expl = lambda expl, **kwargs: show_html(format_as_html(expl, include_styles=False, **kwargs))
     show_html(format_html_styles())
 
-
+    @st.cache(suppress_st_warning=True)
     def predictor(texts):
         return np.array([resultados(string)[1] for string in texts])
 
@@ -274,6 +278,7 @@ else:
         Categoria=RES[0]
         FEATURES=RES[3]
         path = os.path.dirname(__file__)
+        @st.cache(suppress_st_warning=True)
         def resultados2(features,option,option2,Categoria):
             #if option=='TFIDF' or option=='conteo':
             #if option=='TFIDF':
@@ -294,6 +299,7 @@ else:
             return [results[0],probs[0],labels]
 
         RES2=resultados2(FEATURES,option,option2,Categoria)
+        @st.cache(suppress_st_warning=True)
         def grafica2(datos,etiquetas):
             df=pd.DataFrame()
             df["Probabilidad"]=datos
