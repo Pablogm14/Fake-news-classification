@@ -22,4 +22,4 @@ tokenizers==0.11.6
 transformers==4.17.0
 torch==1.10.1
 xgboost==1.5.0
-iPython
+iPython==8.13.2
